@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+*.log
+.api_key
+*.env
+.env
+logs/
+GITHUB_PUSH_PLAN.md

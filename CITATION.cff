@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If you use this research or methodology, please cite it as below."
+type: article
+title: "Enhanced AI-Assisted Lemmatization of Estonian Dialectal Runosongs: Dictionary-Guided Contextual Corpus Learning for Cultural Heritage Processing"
+authors:
+  - family-names: Veskis
+    given-names: Kaarel
+    email: "kaarel.veskis@ut.ee"
+    affiliation: "University of Tartu"
+  - family-names: Särg
+    given-names: Taive
+    affiliation: "University of Tartu"
+abstract: "This article introduces a novel AI-enhanced method for lemmatizing Estonian dialectal runosongs and provides empirical evidence of its accuracy. The method integrates large language model contextual understanding with traditional Estonian morphological analysis and comprehensive dictionary resources. We developed two versions of the method, which we refer to as the Base AI analysis (Base AI) and the Resource-Enhanced AI analysis (Enhanced AI). Through systematic evaluation on 3,216 manually annotated runosong entries spanning 27 Estonian regions, we demonstrate significant improvements in lemmatization accuracy over traditional rule-based approaches. Enhanced AI achieved 90.0% exact match accuracy while Base AI reached 89.2%, as determined by expert validation using a multi-lemma gold standard methodology. For comparison, EstNLTK combined with dictionaries achieved 62.0%, and dictionary-only approaches 27.2%. The methodology provides specialized tools for processing culturally significant dialectal texts while maintaining linguistic precision essential for folklore studies and cultural heritage preservation."
+keywords:
+  - Estonian dialects
+  - runosongs
+  - computational folklore
+  - lemmatization
+  - contextual analysis
+  - digital humanities
+  - morphological processing
+  - dictionary integration
+  - cultural heritage processing
+  - natural language processing
+date-released: 2025-12-19
+url: "[TO BE UPDATED after creating GitHub repository]"
+repository-code: "[TO BE UPDATED after creating GitHub repository]"
+license: CC-BY-4.0
+version: "1.0.0"
