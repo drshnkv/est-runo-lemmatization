@@ -24,11 +24,11 @@ The revised prompts did not measurably change agreement with either reference se
 
 This check (the article's Section 6.2) runs the replication's setups on fourteen unpublished songs held in the Estonian Folklore Archives and compares agreement there with agreement on the forty-five public songs.
 
-Songs and annotations. The second author (Taive Särg) found the fourteen songs, from several dialect areas, among the archive's transcriptions of sound recordings and lemmatized every word following the annotation guidelines of Pivovarova et al. (2025), which the manual annotations of the forty-five songs also follow. Of the 1,221 words, 1,209 are scored; she marked the other twelve as uncertain or to be left out. One of the songs is a Seto song, with 294 of the scored words. Her lemmas were finalized on 12 October 2026, before any song was sent to a language model.
+The second author (Taive Särg) found the fourteen songs, from several dialect areas, among the archive's transcriptions of sound recordings and lemmatized every word following the annotation guidelines of Pivovarova et al. (2025), which the manual annotations of the forty-five songs also follow. Of the 1,221 words, 1,209 are scored; she marked the other twelve as uncertain or to be left out. One of the songs is a Seto song, with 294 of the scored words. Her lemmas were finalized on 12 October 2026, before any song was sent to a language model.
 
-Runs. Six runs on 12 October 2026 used `claude-opus-5` through the replication's command-line interface (version 2.1.247), with the replication's pipeline and July 2025 prompts, the August 2026 index build (section 6) and the checks described in section 2. The songs were given to the model in the same form as the forty-five and with the same metadata fields (section 6), except that they had no ERAB identifier for the collection area and carried the check's own song identifiers. Their English translations were made once and shared by all six runs. Three runs produced Base AI and Enhanced AI outputs, giving Enhanced AI an empty corpus store that is never updated, so that it is shown no earlier analyses; the other three produced Enhanced AI outputs with the replication's frozen store, unchanged. Each setup's three runs take the songs in three different orders.
+Six runs on 12 October 2026 used `claude-opus-5` through the replication's command-line interface (version 2.1.247), with the replication's pipeline and July 2025 prompts, the August 2026 index build (section 6) and the checks described in section 2. The songs were given to the model in the same form as the forty-five and with the same metadata fields (section 6), except that they had no ERAB identifier for the collection area and carried the check's own song identifiers. Their English translations were made once and shared by all six runs. Three runs produced Base AI and Enhanced AI outputs, giving Enhanced AI an empty corpus store that is never updated, so that it is shown no earlier analyses; the other three produced Enhanced AI outputs with the replication's frozen store, unchanged. Each setup's three runs take the songs in three different orders.
 
-Scoring. Each run is scored with the matching rule used for every agreement figure in the article (`lemmas_match` in `analysis/recompute_results.py`), an empty answer counting as wrong. Each setup is compared with the replication condition that gives the model the same context on the forty-five songs. The table gives three-run means in per cent agreement, and differences in percentage points computed from unrounded values:
+Each run is scored with the matching rule used for every agreement figure in the article (`lemmas_match` in `analysis/recompute_results.py`), an empty answer counting as wrong. Each setup is compared with the replication condition that gives the model the same context on the forty-five songs. The table gives three-run means in per cent agreement, and differences in percentage points computed from unrounded values:
 
 | Setup (matching condition on the forty-five songs) | 14 songs (1,209 words) | 45 songs (3,216 words) | Difference |
 |---|---|---|---|
@@ -52,21 +52,35 @@ Fourteen-song check: Base AI, Enhanced AI with an empty corpus store, and Enhanc
 
 ## 6. Implementation details
 
-Index builds. The original evaluation used the July 2025 build of the lemma–variant index: 29,328 lemmas and 166,360 distinct variant spellings (sha256 `a743eeece6611ba03c4e32faa0a60807e8b5644a64af79fe24516027b1cbf6fd`). The replication experiments and the fourteen-song check used the August 2026 build: 33,584 lemmas and 175,493 distinct variant spellings (sha256 `b7194060d57c603a950c0ac14d6655f0a332486a79be97965ecae494318d10bd`). The growth comes from a Seto dictionary integrated in the first half of 2026, which added new lemmas and enlarged 3,776 existing entries with Seto variant forms. Neither build is released.
+### Index builds
 
-Corpus store at the start. In the original evaluation's July 2025 runs with Claude 3.5 Sonnet, the corpus store was not empty when the first evaluated song was processed. It already held about 600 word forms from seven earlier texts: a test sentence and six songs that are not among the forty-five (entries 1 to 7 of the list `processed_texts` in `data/corpus_database.json`). Two of the six songs were processed again on 13 and 14 July, which replaced their earlier entries; the seven texts still account for about 600 word forms in the released file. These entries show no sign of having favoured Enhanced AI, the only system that reads the store: 622 of the 3,216 evaluated words have a word form with an entry from the seven earlier texts (forms compared in lower case), and on these words Enhanced AI's agreement with the manual annotations exceeds Base AI's by 0.48 percentage points (94.21 against 93.73 per cent, a difference of 3 words), against 0.62 points on the other 2,594 words (83.31 against 82.69, a difference of 16 words). In the DeepSeek-V3.1 runs and in the replication's runs with a growing store, the store started empty.
+The original evaluation used the July 2025 build of the lemma–variant index: 29,328 lemmas and 166,360 distinct variant spellings (sha256 `a743eeece6611ba03c4e32faa0a60807e8b5644a64af79fe24516027b1cbf6fd`). The replication experiments and the fourteen-song check used the August 2026 build: 33,584 lemmas and 175,493 distinct variant spellings (sha256 `b7194060d57c603a950c0ac14d6655f0a332486a79be97965ecae494318d10bd`). The growth comes from a Seto dictionary integrated in the first half of 2026, which added new lemmas and enlarged 3,776 existing entries with Seto variant forms. Neither build is released.
 
-Coverage. The coverage figures in the article's Section 3 rest on the 451,371 distinct word forms of the runosong corpus: direct lookup covers 85,863 of them (19.02 per cent); h-variation matching and suffix stripping add 1,946 and 6,209, so 8,155 forms (1.81 percentage points) are covered only through these transformations, and 94,018 in total (20.83 per cent). The figures leave out two further steps that the lookup tries during lemmatization: matching spellings up to two letter changes away (Levenshtein distance) and splitting compound words.
+### Corpus store at the start
 
-Resampling and tests. Percentile cluster-bootstrap intervals use 400,000 replicates for the main comparisons and 10,000 for the regional analyses of the original evaluation, with random seed 20261019. The song-level sign-flip test uses 100,000 permutations. For the replication and the model-selection sensitivity analysis, the test is computed on each song's difference in matching words summed over the three runs, so that ties with the observed statistic are counted exactly. This way of computing the test was adopted on 24 September 2026, after the replication's runs were complete; the comparisons, their Holm adjustment and all other settings are as specified before the first run. The original evaluation's three comparisons are Holm-adjusted together: the gain of Enhanced AI over Base AI with Claude 3.5 Sonnet, the same gain with DeepSeek-V3.1, and the difference between the two gains.
+In the original evaluation's July 2025 runs with Claude 3.5 Sonnet, the corpus store was not empty when the first evaluated song was processed. It already held about 600 word forms from seven earlier texts: a test sentence and six songs that are not among the forty-five (entries 1 to 7 of the list `processed_texts` in `data/corpus_database.json`). Two of the six songs were processed again on 13 and 14 July, which replaced their earlier entries; the seven texts still account for about 600 word forms in the released file. These entries show no sign of having favoured Enhanced AI, the only system that reads the store: 622 of the 3,216 evaluated words have a word form with an entry from the seven earlier texts (forms compared in lower case), and on these words Enhanced AI's agreement with the manual annotations exceeds Base AI's by 0.48 percentage points (94.21 against 93.73 per cent, a difference of 3 words), against 0.62 points on the other 2,594 words (83.31 against 82.69, a difference of 16 words). In the DeepSeek-V3.1 runs and in the replication's runs with a growing store, the store started empty.
 
-Metadata. The fields supplied to the model from ERAB are the collection area's name and ERAB identifier, the year, and the record's display name.
+### Coverage
+
+The coverage figures in the article's Section 3 rest on the 451,371 distinct word forms of the runosong corpus: direct lookup covers 85,863 of them (19.02 per cent); h-variation matching and suffix stripping add 1,946 and 6,209, so 8,155 forms (1.81 percentage points) are covered only through these transformations, and 94,018 in total (20.83 per cent). The figures leave out two further steps that the lookup tries during lemmatization: matching spellings up to two letter changes away (Levenshtein distance) and splitting compound words.
+
+### Resampling and tests
+
+Percentile cluster-bootstrap intervals use 400,000 replicates for the main comparisons and 10,000 for the regional analyses of the original evaluation, with random seed 20261019. The song-level sign-flip test uses 100,000 permutations. For the replication and the model-selection sensitivity analysis, the test is computed on each song's difference in matching words summed over the three runs, so that ties with the observed statistic are counted exactly. This way of computing the test was adopted on 24 September 2026, after the replication's runs were complete; the comparisons, their Holm adjustment and all other settings are as specified before the first run. The original evaluation's three comparisons are Holm-adjusted together: the gain of Enhanced AI over Base AI with Claude 3.5 Sonnet, the same gain with DeepSeek-V3.1, and the difference between the two gains.
+
+### Metadata
+
+The fields supplied to the model from ERAB are the collection area's name and ERAB identifier, the year, and the record's display name.
 
 ## 7. Further results
 
-Word-level tests (the article's Section 5.1). In the article's exact McNemar test, which compares Enhanced AI and Base AI with Claude 3.5 Sonnet against the primary reference set, fifty-one words match the manual annotations in Enhanced AI's output but not in Base AI's, and thirty-two the other way round. With case-sensitive matching, the test gives p = 0.029 against the primary reference set (53 and 32 such words) and p = 0.015 against the secondary one.
+### Word-level tests (the article's Section 5.1)
 
-Processing orders (the article's Section 5.2). Enhanced AI was run three times under each of four processing orders with the growing corpus store, scored against the manual annotations for 3,216 words. The original order is the order of the forty-five songs in the July 2025 corpus store (entries 8 to 52 of the list `processed_texts` in `data/corpus_database.json`); the other three shuffle it with Python's `random.Random`, seeds 101, 102 and 103. The Original row summarizes the three runs of the all-components condition. Base AI ran under the original order only; each gap is the order's mean minus Base AI's 88.15, from unrounded values. These comparisons are descriptive.
+In the article's exact McNemar test, which compares Enhanced AI and Base AI with Claude 3.5 Sonnet against the primary reference set, fifty-one words match the manual annotations in Enhanced AI's output but not in Base AI's, and thirty-two the other way round. With case-sensitive matching, the test gives p = 0.029 against the primary reference set (53 and 32 such words) and p = 0.015 against the secondary one.
+
+### Processing orders (the article's Section 5.2)
+
+Enhanced AI was run three times under each of four processing orders with the growing corpus store, scored against the manual annotations for 3,216 words. The original order is the order of the forty-five songs in the July 2025 corpus store (entries 8 to 52 of the list `processed_texts` in `data/corpus_database.json`); the other three shuffle it with Python's `random.Random`, seeds 101, 102 and 103. The Original row summarizes the three runs of the all-components condition. Base AI ran under the original order only; each gap is the order's mean minus Base AI's 88.15, from unrounded values. These comparisons are descriptive.
 
 | Processing order | Mean agreement % (3 runs) | Run-to-run SD | Gap to Base AI (points) |
 |---|---|---|---|
@@ -77,13 +91,21 @@ Processing orders (the article's Section 5.2). Enhanced AI was run three times u
 
 Mean agreement spans 1.03 percentage points across the four orders, comparable to the variation between repeated runs.
 
-Model-selection sensitivity. Leaving out the seven evaluated songs that had been used to choose the model for the replication (section 8) raises the lead of Enhanced AI with all components over Base AI from +1.34 to +1.60 points (p = 0.007, descriptive) and brings the dictionary's estimated contribution closer to zero, from −0.64 to −0.37 points (p = 0.876, descriptive).
+### Model-selection sensitivity
 
-Normalization controls (the article's Section 5.5). The identity control (EstNLTK applied to the verse lines without the rewriting, capitals kept) reaches 54.85 per cent agreement with the manual annotations, and the lowercased control 55.63 per cent. Restoring the missing letters õ, ä, ö and ü in the normalization models' output gives 56.41 per cent, 0.78 points above the lowercased control (95 per cent interval −3.37 to 4.99).
+Leaving out the seven evaluated songs that had been used to choose the model for the replication (section 8) raises the lead of Enhanced AI with all components over Base AI from +1.34 to +1.60 points (p = 0.007, descriptive) and brings the dictionary's estimated contribution closer to zero, from −0.64 to −0.37 points (p = 0.876, descriptive).
 
-Retraining check (the article's Section 5.5). Retrained from its authors' released implementation in their configuration, the lexicon-enhanced lemmatizer reached 97.39 per cent accuracy on material from its training domain, within one percentage point of the 96.64 per cent documented in its authors' repository.
+### Normalization controls (the article's Section 5.5)
 
-Song-level tally (the article's Section 5.5). With the lemma–variant index, the lexicon-enhanced lemmatizer scores below EstNLTK + Dictionary in twenty-eight of the forty-five songs, above it in eleven, and ties in six.
+The identity control (EstNLTK applied to the verse lines without the rewriting, capitals kept) reaches 54.85 per cent agreement with the manual annotations, and the lowercased control 55.63 per cent. Restoring the missing letters õ, ä, ö and ü in the normalization models' output gives 56.41 per cent, 0.78 points above the lowercased control (95 per cent interval −3.37 to 4.99).
+
+### Retraining check (the article's Section 5.5)
+
+Retrained from its authors' released implementation in their configuration, the lexicon-enhanced lemmatizer reached 97.39 per cent accuracy on material from its training domain, within one percentage point of the 96.64 per cent documented in its authors' repository.
+
+### Song-level tally (the article's Section 5.5)
+
+With the lemma–variant index, the lexicon-enhanced lemmatizer scores below EstNLTK + Dictionary in twenty-eight of the forty-five songs, above it in eleven, and ties in six.
 
 ## 8. Song lists
 
