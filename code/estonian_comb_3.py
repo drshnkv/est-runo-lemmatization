@@ -762,7 +762,8 @@ Poetic Features:
 Verse Structure:
 - Trochaic tetrameter (8 syllables typical)
 - Lines divided into 4 feet (2 syllables each)
-- Standard word order rules may be flexible due to poetic requirements
+- Stress falls on first syllable of each foot
+- Quantitative principles: long stressed syllables preferred
 
 Alliteration and Assonance:
 - Strong alliteration: same initial consonant and vowel
@@ -921,7 +922,8 @@ A. Estonian Poetic Features
 Estonian Verse Structure:
 - Trochaic tetrameter (8 syllables typical in Estonian)
 - Lines divided into 4 feet (2 syllables each)
-- Standard word order rules may be flexible due to poetic requirements in Estonian
+- Stress falls on first syllable of each foot in Estonian
+- Quantitative principles: long stressed syllables preferred in Estonian
 
 Estonian Alliteration and Assonance:
 - Strong alliteration: same initial consonant and vowel
