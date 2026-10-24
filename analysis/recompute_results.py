@@ -132,7 +132,7 @@ for i, (e, p) in enumerate(zip(EVAL, PRED)):
     assert p['poem_id'] == e['poem_id'] and p['original_word'] == e['original_word']
 
 MANUAL = 'manual_lemma_standard'
-EXPERT_REF = 'proper_gold_standard'
+EXPERT_REF = 'secondary_reference'
 MARKER_COLUMNS = {'lexicon_lemmatizer_dialect', 'lexicon_lemmatizer_vabamorf',
                   'glilem', 'stanza'}
 
@@ -636,7 +636,8 @@ V['subcategory.enhanced_above_rule_based'] = sum(
     1 for c in SUBCATEGORIES
     if V[f'subcategory.{c}.claude_enhanced'] > max(V[f'subcategory.{c}.{s}'] for s in
                                                     ['estnltk_dictionary', 'pure_estnltk',
-                                                     'lexical']))
+                                                     'lexical', 'lexicon_dialect',
+                                                     'normalization']))
 # Share of entries where Enhanced AI departs from each reference.
 V['divergence.manual'] = 100 - V['manual.claude_enhanced']
 V['divergence.expert'] = 100 - V['expert.claude_enhanced']
@@ -1042,7 +1043,7 @@ cite('Section 5.6', [
     ('subcategory.voro_songs', 'two', 'songs in the Võro subcategory'),
     ('subcategory.Võro.claude_enhanced', '75.3', 'Enhanced AI (Claude), Võro, agreement with the manual annotations (%)'),
     ('subcategory.Võro.claude_base', '77.6', 'Base AI (Claude), Võro, agreement with the manual annotations (%)'),
-    ('subcategory.enhanced_above_rule_based', 'nine', 'subcategories where Enhanced AI (Claude) is above the rule-based methods'),
+    ('subcategory.enhanced_above_rule_based', 'nine', 'subcategories where Enhanced AI (Claude) is above the rule-based and neural methods'),
 ])
 F3 = {
     'pure_estnltk': [(34.38, 24.71, 48.15), (76.00, 72.16, 79.68), (68.63, 63.09, 77.94)],
